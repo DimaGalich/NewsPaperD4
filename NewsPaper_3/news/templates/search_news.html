@@ -1,0 +1,33 @@
+{% extends 'default.html' %}
+{% load custom_filters %}
+
+{% block content %}
+<h1>Поиск новостей</h1>
+<form action="{% url 'news:search_results' %}" method="get">
+    <label for="search_title">По названию:</label>
+    <input type="text" id="search_title" name="title">
+    <br>
+    <label for="search_author">По имени автора:</label>
+    <input type="text" id="search_author" name="author">
+    <br>
+    <label for="search_date">Позже какой даты:</label>
+    <input type="date" id="search_date" name="date">
+    <br>
+    <button type="submit">Искать</button>
+</form>
+
+<h2>Результаты поиска:</h2>
+{% for news in news_list %}
+    <div>
+        <li>
+            <h2>{{ news.title|censor }}</h2>
+            <p>Дата публикации: {{ news.get_formatted_date }}</p>
+            <a href="{% url 'news:news_detail' news.pk %}">Читать</a><br>
+            <a href="{% url 'news:delete_news' news.pk %}" class="btn btn-danger">Удалить</a>
+            <h5>{{ news.get_short_text|censor }}</h5>
+        </li>
+    </div>
+{% empty %}
+    <p>По вашему запросу ничего не найдено.</p>
+{% endfor %}
+{% endblock %}
